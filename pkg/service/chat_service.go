@@ -14,7 +14,7 @@ import (
 )
 
 func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
-	log.Println(receivedMessage)
+	log.Println(*receivedMessage)
 	start := time.Now().Unix()
 	apiURL := "https://api.openai.com/v1/chat/completions"
 	messages := make([]model.Message,0)
@@ -58,6 +58,7 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 	}
 	var result model.OpenAIResponse
 	err = json.Unmarshal(body, &result)
+	log.Println(result)
 	if err != nil {
 		log.Println(err.Error())
 		return
@@ -65,7 +66,6 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 	if len(result.Choices) == 0 {
 		return
 	}
-	log.Println(result)
 	reply := strings.TrimSpace(result.Choices[0].Message.Content)
 	response := model.TextMessage{
 		ToUserName:   receivedMessage.ToUserName,
