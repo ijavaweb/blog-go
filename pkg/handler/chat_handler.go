@@ -4,6 +4,7 @@ import (
 	"blog-go/pkg/model"
 	"crypto/sha1"
 	"encoding/hex"
+	"encoding/xml"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xmlpath/xmlpath"
 	"log"
@@ -52,7 +53,11 @@ func MessageHandler(c *gin.Context) {
 		MsgType:      receivedMessage.MsgType,
 		Content:       "hello",
 	}
-	c.XML(200,response)
+	msg, err := xml.Marshal(&response)
+	if err != nil {
+		return
+	}
+	_, _ = c.Writer.Write(msg)
 	return
 	//go service.GenerateGPTResponse(c,&receivedMessage)
 	//return
