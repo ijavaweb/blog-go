@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -87,6 +88,8 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 <Content><![CDATA[%s]]></Content>
 </xml>`
 	content := fmt.Sprintf(t,receivedMessage.ToUserName, receivedMessage.FromUserName,time.Now().Unix(),receivedMessage.MsgType,reply)
+	contentLength := len(content)
+	c.Header("Content-Length", strconv.Itoa(contentLength))
 	c.Data(200, "application/xml; charset=utf-8", []byte(content))
 	return
 }
