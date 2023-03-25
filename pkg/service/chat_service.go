@@ -4,13 +4,13 @@ import (
 	"blog-go/pkg/model"
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -73,24 +73,18 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 		return
 	}
 	reply := strings.TrimSpace(result.Choices[0].Message.Content)
-	//response := model.TextMessage{
-	//	ToUserName:   receivedMessage.ToUserName,
-	//	FromUserName: receivedMessage.FromUserName,
-	//	CreateTime:   time.Now().Unix(),
-	//	MsgType:      receivedMessage.MsgType,
-	//	Content:       reply,
-	//}
-	t := `<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%d</CreateTime>
-<MsgType><![CDATA[%s]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>`
-	content := fmt.Sprintf(t,receivedMessage.ToUserName, receivedMessage.FromUserName,time.Now().Unix(),receivedMessage.MsgType,reply)
-	contentLength := len(content)
-	c.Header("Content-Length", strconv.Itoa(contentLength))
-	c.Data(200, "application/xml; charset=utf-8", []byte(content))
+	response := model.TextMessage{
+		ToUserName:   receivedMessage.FromUserName,
+		FromUserName: receivedMessage.ToUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      receivedMessage.MsgType,
+		Content:      reply,
+	}
+	msg, err := xml.Marshal(&response)
+	if err != nil {
+		return
+	}
+	_, _ = c.Writer.Write(msg)
 	return
 }
 func GenerateGPTTestResponse(content string) string {

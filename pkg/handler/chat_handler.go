@@ -2,16 +2,15 @@ package handler
 
 import (
 	"blog-go/pkg/model"
+	"blog-go/pkg/service"
 	"crypto/sha1"
 	"encoding/hex"
-	"encoding/xml"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xmlpath/xmlpath"
 	"log"
 	"net/http"
 	"sort"
 	"strings"
-	"time"
 )
 
 const (
@@ -46,21 +45,9 @@ func MessageHandler(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Invalid XML")
 		return
 	}
-	response := model.TextMessage{
-		ToUserName:   receivedMessage.FromUserName,
-		FromUserName: receivedMessage.ToUserName,
-		CreateTime:   time.Now().Unix(),
-		MsgType:      receivedMessage.MsgType,
-		Content:       "hello",
-	}
-	msg, err := xml.Marshal(&response)
-	if err != nil {
-		return
-	}
-	_, _ = c.Writer.Write(msg)
-	return
-	//go service.GenerateGPTResponse(c,&receivedMessage)
-	//return
+
+	go service.GenerateGPTResponse(c,&receivedMessage)
+
 }
 
 //func MessageHandler (c *gin.Context) {
