@@ -44,8 +44,6 @@ func MessageHandler (c *gin.Context) {
 		c.String(http.StatusBadRequest, "Invalid XML")
 		return
 	}
-	c.Header("Content-Length", "-1")
-
 	go service.GenerateGPTResponse(c,&receivedMessage)
 	return
 }
