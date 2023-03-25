@@ -2,21 +2,23 @@ package handler
 
 import (
 	"blog-go/pkg/model"
-	"blog-go/pkg/service"
 	"crypto/sha1"
 	"encoding/hex"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xmlpath/xmlpath"
 	"log"
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 )
 
 const (
-	wechatToken     = "67_1ou0ZA_NLl_R8TunAGmB15VF3KWNkHusLRt4V8ZhRH9zRDQ_vmmK1F_Os2dqjVI8nO83NFE10EJUaLnpnIoA5cG0Ac_Nl_wupuf-RZbLdeXOqdmgPL9tVsJJSUwNKVeAIAHEP"
+	wechatToken = "67_1ou0ZA_NLl_R8TunAGmB15VF3KWNkHusLRt4V8ZhRH9zRDQ_vmmK1F_Os2dqjVI8nO83NFE10EJUaLnpnIoA5cG0Ac_Nl_wupuf-RZbLdeXOqdmgPL9tVsJJSUwNKVeAIAHEP"
 )
-func  VerifyData(c *gin.Context) {
+
+func VerifyData(c *gin.Context) {
 	req := c.Request
 	signature := req.URL.Query().Get("signature")
 	timestamp := req.URL.Query().Get("timestamp")
@@ -27,7 +29,7 @@ func  VerifyData(c *gin.Context) {
 	log.Println(nonce)
 	log.Println(timestamp)
 	log.Println(echostr)
-	c.String(http.StatusOK,echostr)
+	c.String(http.StatusOK, echostr)
 	return
 	//if checkSignature(wechatToken, signature, timestamp, nonce) {
 	//	c.JSON(http.StatusOK,echostr)
@@ -36,17 +38,28 @@ func  VerifyData(c *gin.Context) {
 	//	c.JSON(http.StatusOK,"invalid signature")
 	//}
 }
-func MessageHandler (c *gin.Context) {
+func MessageHandler(c *gin.Context) {
 	var receivedMessage model.TextMessage
-	err:=c.ShouldBindXML(&receivedMessage)
+	err := c.ShouldBindXML(&receivedMessage)
 	if err != nil {
 		log.Println(err.Error())
 		c.String(http.StatusBadRequest, "Invalid XML")
 		return
 	}
-	go service.GenerateGPTResponse(c,&receivedMessage)
+	t := `<xml>
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%d</CreateTime>
+<MsgType><![CDATA[%s]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>`
+	content := fmt.Sprintf(t, receivedMessage.ToUserName, receivedMessage.FromUserName, time.Now().Unix(), receivedMessage.MsgType, "hello")
+	c.Data(200, "application/xml; charset=utf-8", []byte(content))
 	return
+	//go service.GenerateGPTResponse(c,&receivedMessage)
+	//return
 }
+
 //func MessageHandler (c *gin.Context) {
 //	var receivedMessage model.ReqMessage
 //	err:=c.ShouldBind(&receivedMessage)
