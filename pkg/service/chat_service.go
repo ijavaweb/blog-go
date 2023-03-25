@@ -25,7 +25,7 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 		Content: receivedMessage.Content,
 	})
 	data := &model.OpenAIRequest{
-		Model:    "gpt-3.5-turbo",
+		Model:    "text-davinci-003",
 		Messages: messages,
 	}
 	jsonData, err := json.Marshal(data)
