@@ -4,8 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"log"
-	"os"
 )
 
 var (
@@ -16,15 +14,15 @@ var (
 func init() {
 	InfoLogger=logrus.New()
 	ErrorLogger = logrus.New()
-	errFile, err := os.OpenFile("../log/error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalln("Failed to open error log file: ", err)
-	}
-	file, err := os.OpenFile("../log/info.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalln("Failed to open error log file: ", err)
-	}
-	InfoLogger.SetOutput(file)
+	//errFile, err := os.OpenFile("E:\\project\\blog-go\\log\\error.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	//if err != nil {
+	//	log.Fatalln("Failed to open error.txt log file: ", err)
+	//}
+	//file, err := os.OpenFile(".E:\\project\\blog-go\\log\\info.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	//if err != nil {
+	//	log.Fatalln("Failed to open error.txt log file: ", err)
+	//}
+	//InfoLogger.SetOutput(file)
 	InfoLogger.SetLevel(4)
 	InfoLogger.SetReportCaller(true)
 	InfoLogger.SetFormatter(&logrus.TextFormatter{
@@ -32,7 +30,7 @@ func init() {
 		TimestampFormat: "2006-01-02 15:03:04",
 	})
 
-	ErrorLogger.SetOutput(errFile)
+	//ErrorLogger.SetOutput(errFile)
 	ErrorLogger.SetLevel(2)
 	ErrorLogger.SetReportCaller(true)
 	ErrorLogger.SetFormatter(&logrus.TextFormatter{
