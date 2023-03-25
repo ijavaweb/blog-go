@@ -54,7 +54,7 @@ func MessageHandler(c *gin.Context) {
 <Content><![CDATA[%s]]></Content>
 </xml>`
 	content := fmt.Sprintf(t, receivedMessage.ToUserName, receivedMessage.FromUserName, time.Now().Unix(), receivedMessage.MsgType, "hello")
-	c.Data(200, "application/xml; charset=utf-8", []byte(content))
+	c.XML(200, content)
 	return
 	//go service.GenerateGPTResponse(c,&receivedMessage)
 	//return
