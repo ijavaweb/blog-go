@@ -47,8 +47,8 @@ func MessageHandler(c *gin.Context) {
 		return
 	}
 	response := model.TextMessage{
-		ToUserName:   receivedMessage.ToUserName,
-		FromUserName: receivedMessage.FromUserName,
+		ToUserName:   receivedMessage.FromUserName,
+		FromUserName: receivedMessage.ToUserName,
 		CreateTime:   time.Now().Unix(),
 		MsgType:      receivedMessage.MsgType,
 		Content:       "hello",
