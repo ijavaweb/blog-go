@@ -4,7 +4,6 @@ import (
 	"blog-go/pkg/model"
 	"crypto/sha1"
 	"encoding/hex"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-xmlpath/xmlpath"
 	"log"
@@ -46,15 +45,14 @@ func MessageHandler(c *gin.Context) {
 		c.String(http.StatusBadRequest, "Invalid XML")
 		return
 	}
-	t := `<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%d</CreateTime>
-<MsgType><![CDATA[%s]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>`
-	content := fmt.Sprintf(t, receivedMessage.ToUserName, receivedMessage.FromUserName, time.Now().Unix(), receivedMessage.MsgType, "hello")
-	c.String(200, content)
+	response := model.TextMessage{
+		ToUserName:   receivedMessage.ToUserName,
+		FromUserName: receivedMessage.FromUserName,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      receivedMessage.MsgType,
+		Content:       "hello",
+	}
+	c.XML(200,response)
 	return
 	//go service.GenerateGPTResponse(c,&receivedMessage)
 	//return
