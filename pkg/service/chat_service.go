@@ -72,15 +72,22 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 		return
 	}
 	reply := strings.TrimSpace(result.Choices[0].Message.Content)
-	response := model.TextMessage{
-		ToUserName:   receivedMessage.ToUserName,
-		FromUserName: receivedMessage.FromUserName,
-		CreateTime:   time.Now().Unix(),
-		MsgType:      receivedMessage.MsgType,
-		Content:       reply,
-	}
-	c.Header("Content-Length", "-1")
-	c.XML(http.StatusOK,response)
+	//response := model.TextMessage{
+	//	ToUserName:   receivedMessage.ToUserName,
+	//	FromUserName: receivedMessage.FromUserName,
+	//	CreateTime:   time.Now().Unix(),
+	//	MsgType:      receivedMessage.MsgType,
+	//	Content:       reply,
+	//}
+	t := `<xml>
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%d</CreateTime>
+<MsgType><![CDATA[%s]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>`
+	content := fmt.Sprintf(t,receivedMessage.ToUserName, receivedMessage.FromUserName,time.Now().Unix(),receivedMessage.MsgType,reply)
+	c.Data(200, "application/xml; charset=utf-8", []byte(content))
 	return
 }
 func GenerateGPTTestResponse(content string) string {
