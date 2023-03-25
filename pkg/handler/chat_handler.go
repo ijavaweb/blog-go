@@ -36,28 +36,28 @@ func  VerifyData(c *gin.Context) {
 	//	c.JSON(http.StatusOK,"invalid signature")
 	//}
 }
-//func MessageHandler (c *gin.Context) {
-//	var receivedMessage model.TextMessage
-//	err:=c.ShouldBindXML(&receivedMessage)
-//	if err != nil {
-//		log.Println(err.Error())
-//		c.String(http.StatusBadRequest, "Invalid XML")
-//		return
-//	}
-//	go service.GenerateGPTResponse(c,&receivedMessage)
-//	return
-//}
 func MessageHandler (c *gin.Context) {
-	var receivedMessage model.ReqMessage
-	err:=c.ShouldBind(&receivedMessage)
+	var receivedMessage model.TextMessage
+	err:=c.ShouldBindXML(&receivedMessage)
 	if err != nil {
 		log.Println(err.Error())
 		c.String(http.StatusBadRequest, "Invalid XML")
 		return
 	}
-	str := service.GenerateGPTTestResponse(receivedMessage.Content)
-	c.JSON(http.StatusOK,str)
+	go service.GenerateGPTResponse(c,&receivedMessage)
+	return
 }
+//func MessageHandler (c *gin.Context) {
+//	var receivedMessage model.ReqMessage
+//	err:=c.ShouldBind(&receivedMessage)
+//	if err != nil {
+//		log.Println(err.Error())
+//		c.String(http.StatusBadRequest, "Invalid XML")
+//		return
+//	}
+//	str := service.GenerateGPTTestResponse(receivedMessage.Content)
+//	c.JSON(http.StatusOK,str)
+//}
 func checkSignature(token, signature, timestamp, nonce string) bool {
 	values := []string{token, timestamp, nonce}
 	sort.Strings(values)
