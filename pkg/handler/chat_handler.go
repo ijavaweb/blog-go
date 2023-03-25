@@ -48,7 +48,7 @@ func MessageHandler(c *gin.Context) {
 	}
 
 	go service.GenerateGPTResponse(c,&receivedMessage)
-	<- time.After(5 * time.Second)
+	<- time.After(4 * time.Second)
 	c.String(http.StatusOK,"success")
 }
 
