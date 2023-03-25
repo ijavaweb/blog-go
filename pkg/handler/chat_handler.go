@@ -46,7 +46,7 @@ func MessageHandler(c *gin.Context) {
 		return
 	}
 
-	go service.GenerateGPTResponse(c,&receivedMessage)
+	service.GenerateGPTResponse(c,&receivedMessage)
 
 }
 
