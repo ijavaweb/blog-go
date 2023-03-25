@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 )
 
 const (
@@ -46,8 +47,9 @@ func MessageHandler(c *gin.Context) {
 		return
 	}
 
-	service.GenerateGPTResponse(c,&receivedMessage)
-
+	go service.GenerateGPTResponse(c,&receivedMessage)
+	<- time.After(5 * time.Second)
+	c.String(http.StatusOK,"success")
 }
 
 //func MessageHandler (c *gin.Context) {
