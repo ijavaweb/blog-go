@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	wechatToken     = "67_cLACSYnbUDKi0lCk_PKk8CidfO5RonJeLWWStL7cI5-_VE4e-bATO-oinkJSWUM4b6W1rQWumCIyfJAfH8s8UVcGcYzvjqNBNh_DY5qRxhfrvpFzf6qUgfAXZR4CDWcAHALM"
+	wechatToken     = "67_1ou0ZA_NLl_R8TunAGmB15VF3KWNkHusLRt4V8ZhRH9zRDQ_vmmK1F_Os2dqjVI8nO83NFE10EJUaLnpnIoA5cG0Ac_Nl_wupuf-RZbLdeXOqdmgPL9tVsJJSUwNKVeAIAHEP"
 )
 func  VerifyData(c *gin.Context) {
 	req := c.Request
@@ -47,6 +47,17 @@ func MessageHandler (c *gin.Context) {
 	go service.GenerateGPTResponse(c,&receivedMessage)
 	return
 }
+//func MessageHandler (c *gin.Context) {
+//	var receivedMessage model.ReqMessage
+//	err:=c.ShouldBind(&receivedMessage)
+//	if err != nil {
+//		log.Println(err.Error())
+//		c.String(http.StatusBadRequest, "Invalid XML")
+//		return
+//	}
+//	str := service.GenerateGPTTestResponse(receivedMessage.Content)
+//	c.JSON(http.StatusOK,str)
+//}
 func checkSignature(token, signature, timestamp, nonce string) bool {
 	values := []string{token, timestamp, nonce}
 	sort.Strings(values)

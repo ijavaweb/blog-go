@@ -1,6 +1,6 @@
 package model
 const (
-	OpenAIAPIClient = "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"
+	OpenAIAPIClient = "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"
 )
 type OpenAIResponse struct {
 	Choices []Choice `json:"choices"`
@@ -20,5 +20,9 @@ type OpenAIRequest struct {
 }
 type  Message struct {
 	Role string `json:"role"`
+	Content string `json:"content"`
+}
+
+type  ReqMessage struct {
 	Content string `json:"content"`
 }
