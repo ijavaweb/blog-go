@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -36,9 +37,13 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 	if err != nil {
 		return
 	}
-
+	secret := os.Getenv("OPENAI_API_KEY")
+	if secret == "" {
+		log.Println(" empty secret")
+		return
+	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", model.OpenAIAPIClient))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", secret))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -100,9 +105,12 @@ func GenerateGPTTestResponse(content string) string {
 	if err != nil {
 		return " "
 	}
+	secret ,_:= os.LookupEnv("OPENAI_API_KEY")
+	log.Println(secret)
+	log.Println(len(secret))
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", model.OpenAIAPIClient))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", secret))
 
 	resp, err := client.Do(req)
 	if err != nil {
