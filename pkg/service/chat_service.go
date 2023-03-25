@@ -74,6 +74,7 @@ func GenerateGPTResponse(c *gin.Context,receivedMessage *model.TextMessage)  {
 		MsgType:      receivedMessage.MsgType,
 		Content:       reply,
 	}
+	c.Header("Content-Length", "-1")
 	c.XML(http.StatusOK,response)
 	return
 }
