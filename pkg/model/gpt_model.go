@@ -1,6 +1,6 @@
 package model
 const (
-	OpenAIAPIClient = "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"
+	OpenAIAPIClient = "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"
 )
 type OpenAIResponse struct {
 	Choices []Choice `json:"choices"`
